@@ -12,12 +12,17 @@ app.use(express.json());
 const base = "/api/zora";
 const srcRoutesDir = join(process.cwd(), "api/zora");
 const distRoutesDir = join(process.cwd(), "dist/api/zora");
-const routesDir = existsSync(srcRoutesDir) ? srcRoutesDir : distRoutesDir;
+const routesDir = existsSync(distRoutesDir)
+  ? distRoutesDir
+  : srcRoutesDir;
 
 async function loadRoutes() {
   for (const file of readdirSync(routesDir)) {
     const ext = extname(file);
-    if ((ext === ".ts" || ext === ".js") && !file.startsWith("_supabase")) {
+    const isSupported =
+      (ext === ".js" && routesDir === distRoutesDir) ||
+      (ext === ".ts" && routesDir === srcRoutesDir);
+    if (isSupported && !file.startsWith("_supabase")) {
       const routeName = file.replace(ext, "");
       const routePath = `${base}/${routeName}`;
       const modulePath = pathToFileURL(join(routesDir, file)).href;
