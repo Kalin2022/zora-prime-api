@@ -1,6 +1,7 @@
+import type { Request, Response } from "express";
 import { supabase, ok, error } from "./_supabase";
 
-export async function handler(req, res) {
+export async function handler(req: Request, res: Response) {
   const host_id = req.body.host_id ?? req.body.hostId;
   const identity_seed = req.body.identity_seed ?? req.body.identitySeed;
   const voice_profile = req.body.voice_profile ?? req.body.voiceProfile ?? null;

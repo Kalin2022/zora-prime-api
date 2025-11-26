@@ -14,21 +14,30 @@ const srcRoutesDir = join(process.cwd(), "api/zora");
 const distRoutesDir = join(process.cwd(), "dist/api/zora");
 const routesDir = existsSync(srcRoutesDir) ? srcRoutesDir : distRoutesDir;
 
-for (const file of readdirSync(routesDir)) {
-  const ext = extname(file);
-  if ((ext === ".ts" || ext === ".js") && !file.startsWith("_supabase")) {
-    const routeName = file.replace(ext, "");
-    const routePath = `${base}/${routeName}`;
-    const modulePath = pathToFileURL(join(routesDir, file)).href;
-    const route = await import(modulePath);
-    app.post(routePath, route.handler);
-    console.log(`Loaded route: POST ${routePath}`);
+async function loadRoutes() {
+  for (const file of readdirSync(routesDir)) {
+    const ext = extname(file);
+    if ((ext === ".ts" || ext === ".js") && !file.startsWith("_supabase")) {
+      const routeName = file.replace(ext, "");
+      const routePath = `${base}/${routeName}`;
+      const modulePath = pathToFileURL(join(routesDir, file)).href;
+      const route = await import(modulePath);
+      app.post(routePath, route.handler);
+      console.log(`Loaded route: POST ${routePath}`);
+    }
   }
 }
 
-const port = process.env.PORT || 3000;
-app.listen(port, () => {
-  console.log(`Zora-Prime API running on port ${port}`);
-});
+loadRoutes()
+  .then(() => {
+    const port = process.env.PORT || 3000;
+    app.listen(port, () => {
+      console.log(`Zora-Prime API running on port ${port}`);
+    });
+  })
+  .catch((err) => {
+    console.error("Failed to load routes", err);
+    process.exit(1);
+  });
 
 

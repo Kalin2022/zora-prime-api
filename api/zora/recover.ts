@@ -1,6 +1,7 @@
+import type { Request, Response } from "express";
 import { supabase, ok, error } from "./_supabase";
 
-export async function handler(req, res) {
+export async function handler(req: Request, res: Response) {
   const email = req.body.email;
 
   if (!email) {

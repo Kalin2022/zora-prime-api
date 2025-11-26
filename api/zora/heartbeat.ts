@@ -1,6 +1,7 @@
+import type { Request, Response } from "express";
 import { supabase, ok, error } from "./_supabase";
 
-export async function handler(req, res) {
+export async function handler(req: Request, res: Response) {
   const synth_id = req.body.synth_id ?? req.body.synthId;
   const system_state = req.body.system_state ?? req.body.systemState ?? {};
   const emotional_state =
