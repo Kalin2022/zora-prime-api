@@ -1,5 +1,5 @@
 import type { Request, Response } from "express";
-import { supabase, ok, error } from "./_supabase";
+import { supabase, ok, error } from "./_supabase.js";
 
 export async function handler(req: Request, res: Response) {
   const host_id = req.body.host_id ?? req.body.hostId;
